@@ -1,5 +1,7 @@
 import 'package:ev_charging/DashboardPage.dart';
+import 'package:ev_charging/RegistrationPage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> key = GlobalKey<FormState>();
   bool _showPassword = false;
+  bool check = false;
 
   @override
   void dispose() {
@@ -32,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // appBar: AppBar(
       //   title: Text('Login'),
       // ),
@@ -100,11 +104,30 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     }),
               ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                      value: check,
+                      onChanged: (value) {
+                        setState(() {
+                          check = value!;
+                        });
+                      }),
+                  Text('Remember me'),
+                ],
+              ),
               SizedBox(height: 80.0),
               ElevatedButton(
-                onPressed: () {
+                onPressed: ()async {
                   bool validate = key.currentState!.validate();
                   if (validate == true) {
+                    if (check == true) {
+                      SharedPreferences shared = await SharedPreferences.getInstance();
+                      await shared.setBool("isLogged", true);
+                    }
                     _login();
                   }
                 },
@@ -121,6 +144,15 @@ class _LoginPageState extends State<LoginPage> {
                   'Login',
                   style: TextStyle(fontSize: 20),
                 ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                  );
+                },
+                child: Text('New user? Register here'),
               ),
             ],
           ),

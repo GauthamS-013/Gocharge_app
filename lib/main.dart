@@ -7,6 +7,7 @@ import 'Findstation.dart';
 import 'LoginPage.dart';
 import 'RegistrationPage.dart';
 import 'SplashScreen.dart';
+import 'Viewbooking.dart';
 
 void main() => runApp(LoginApp());
 

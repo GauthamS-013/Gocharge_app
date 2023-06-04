@@ -31,6 +31,13 @@ dependencies:
   flutter:
     sdk: flutter
   table_calendar: ^3.0.0
+  shared_preferences: ^2.1.1
+  google_maps_flutter: ^2.2.8
+  location:
+    git:
+      url: https://github.com/781flyingdutchman/flutterlocation.git
+      ref: V4
+      path: packages/location
 
 
   # The following adds the Cupertino Icons font to your application.

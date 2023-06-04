@@ -1,8 +1,12 @@
+import 'package:ev_charging/LoginPage.dart';
 import 'package:ev_charging/ManageEVVehiclesPage.dart';
+import 'package:ev_charging/Viewbooking.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Findstation.dart';
 import 'ProfilePage.dart';
+import 'Roadmap.dart';
 
 class DashboardPage extends StatelessWidget {
   @override
@@ -22,6 +26,15 @@ class DashboardPage extends StatelessWidget {
               );
             },
           ),
+          ElevatedButton(
+              onPressed: () async {
+                SharedPreferences log = await SharedPreferences.getInstance();
+                await log.clear();
+
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+              child: Text("Logout"))
         ],
       ),
       body: GridView.count(
@@ -55,6 +68,8 @@ class DashboardPage extends StatelessWidget {
             title: 'View Booking',
             onTap: () {
               // Perform action when 'View Booking' button is tapped
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Viewbooking()));
             },
           ),
           DashboardButton(
@@ -62,6 +77,8 @@ class DashboardPage extends StatelessWidget {
             title: 'Roadmap',
             onTap: () {
               // Perform action when 'Roadmap' button is tapped
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MapScreen()));
             },
           ),
         ],
