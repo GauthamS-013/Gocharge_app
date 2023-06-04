@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -15,12 +13,6 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller =
   Completer<GoogleMapController>();
-  getloc() async {
-    Location location = Location();
-
-    LocationData locationData = await location.getLocation();
-    print(locationData.longitude);
-  }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(11.2809203,75.7952727),
