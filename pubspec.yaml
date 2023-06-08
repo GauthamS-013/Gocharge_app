@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   table_calendar: ^3.0.0
   shared_preferences: ^2.1.1
+  firebase_auth: ^4.6.2
+  cloud_firestore: ^4.8.0
   google_maps_flutter: ^2.2.8
   location:
     git:

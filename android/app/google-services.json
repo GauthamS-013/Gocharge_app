@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "736841676260",
+    "project_id": "gocharge-app",
+    "storage_bucket": "gocharge-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736841676260:android:0aadf0abd9f01ec84343f1",
+        "android_client_info": {
+          "package_name": "com.gocharge.ev_charging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736841676260-crngpqla7id1g2elbsg6nmoja316gdd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQqGIjRL_Sybo6sVp0k680ZHVOMP220Qk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "736841676260-crngpqla7id1g2elbsg6nmoja316gdd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
