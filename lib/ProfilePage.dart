@@ -1,145 +1,139 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String name;
-  final String email;
-  final String contact;
-
-  ProfilePage([this.name='NAME', this.email="EMAIL", this.contact='1234567890']);
-
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _contactController = TextEditingController();
-  TextEditingController _oldPasswordController = TextEditingController();
-  TextEditingController _newPasswordController = TextEditingController();
-
-  String _oldPasswordError = '';
-  String _newPasswordError = '';
+  TextEditingController _verificationCodeController = TextEditingController();
+  String _verificationId = '';
 
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.name;
-    _emailController.text = widget.email;
-    _contactController.text = widget.contact;
+    _loadUserProfile();
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _contactController.dispose();
-    _oldPasswordController.dispose();
-    _newPasswordController.dispose();
-    super.dispose();
+  void _loadUserProfile() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      setState(() {
+        _user = user;
+        _nameController.text = user.displayName ?? '';
+        _emailController.text = user.email ?? '';
+        _contactController.text = user.phoneNumber ?? '';
+      });
+    }
   }
 
-  void _updateProfile() {
-    // Update profile logic here
-    String name = _nameController.text;
-    String email = _emailController.text;
-    String contact = _contactController.text;
+  void _updateProfile() async {
+    String newName = _nameController.text.trim();
+    String newEmail = _emailController.text.trim();
+    String newContact = _contactController.text.trim();
 
-    // Perform profile update operations
+    try {
+      if (_user != null) {
+        // Update user profile in Firebase Authentication
+        await _user!.updateDisplayName(newName);
+        await _user!.updateEmail(newEmail);
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Profile Updated'),
-          content: Text('Your profile has been updated successfully.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
+        // Update phone number with verification code
+        if (_verificationId.isNotEmpty) {
+          PhoneAuthCredential credential = PhoneAuthProvider.credential(
+            verificationId: _verificationId,
+            smsCode: _verificationCodeController.text.trim(),
+          );
+          await _user!.updatePhoneNumber(credential);
+        }
+
+        // Reload the user profile
+        _loadUserProfile();
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Profile Updated'),
+              content: Text('Your profile has been updated successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
-  }
-
-  void _changePassword() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Change Password'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _oldPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Old Password',
-                  errorText: _oldPasswordError,
-                ),
-              ),
-              TextField(
-                controller: _newPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'New Password',
-                  errorText: _newPasswordError,
-                ),
+      }
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to update profile: $error'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                String oldPassword = _oldPasswordController.text;
-                String newPassword = _newPasswordController.text;
+          );
+        },
+      );
+    }
+  }
 
-                // Validate old password
-                if (oldPassword != 'currentPassword') {
-                  setState(() {
-                    _oldPasswordError = 'Incorrect password';
-                  });
-                  return;
-                } else {
-                  setState(() {
-                    _oldPasswordError = '';
-                  });
-                }
-
-                // Validate new password
-                if (newPassword.length < 8 ||
-                    !newPassword.contains(RegExp(r'\d')) ||
-                    newPassword.contains(' ')) {
-                  setState(() {
-                    _newPasswordError =
-                    'Password must be at least 8 characters long, contain at least one number, and no blank spaces.';
-                  });
-                  return;
-                } else {
-                  setState(() {
-                    _newPasswordError = '';
-                  });
-                }
-
-                // Perform password update operations
-
-                Navigator.of(context).pop();
-              },
-              child: Text('Change'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-          ],
+  void _verifyPhoneNumber(String phoneNumber) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // Auto verification completed, directly update the phone number
+        await _user!.updatePhoneNumber(credential);
+        _verificationCodeController.text = credential.smsCode!;
+        setState(() {
+          _verificationId = '';
+        });
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Verification Failed'),
+              content: Text('Failed to verify phone number: ${e.message}'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
         );
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        setState(() {
+          _verificationId = verificationId;
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        setState(() {
+          _verificationId = verificationId;
+        });
       },
     );
   }
@@ -161,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _nameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Name',
+                  labelText: 'Name',
                 ),
               ),
             ),
@@ -171,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Email',
+                  labelText: 'Email',
                 ),
               ),
             ),
@@ -181,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _contactController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Contact',
+                  labelText: 'Contact',
                 ),
               ),
             ),
@@ -189,11 +183,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ElevatedButton(
               onPressed: _updateProfile,
               child: Text('Update Profile'),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _changePassword,
-              child: Text('Change Password'),
             ),
           ],
         ),
