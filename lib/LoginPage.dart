@@ -2,6 +2,10 @@ import 'package:ev_charging/DashboardPage.dart';
 import 'package:ev_charging/RegistrationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,15 +26,48 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _login() {
-    // Perform login logic here
-    // Retrieve values from _emailController and _passwordController
+  void _login() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => DashboardPage()),
-    );
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Login successful, handle the userCredential as needed
+      User? user = userCredential.user;
+      if (user != null) {
+        // User logged in successfully, navigate to the dashboard page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardPage()),
+        );
+      }
+    } catch (e) {
+      // Handle login errors
+      String errorMessage = e.toString();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Error'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

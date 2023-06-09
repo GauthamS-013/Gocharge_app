@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:ev_charging/booknow.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 
 import 'Admin_Addstation.dart';
 import 'Admindashboard.dart';
@@ -10,7 +12,11 @@ import 'RegistrationPage.dart';
 import 'SplashScreen.dart';
 import 'Viewbooking.dart';
 
-void main() => runApp(LoginApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(LoginApp());
+}
 
 class LoginApp extends StatelessWidget {
   @override

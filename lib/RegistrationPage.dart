@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+
+import 'DashboardPage.dart';
 import 'LoginPage.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -12,7 +17,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _contactController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool check = false;
   bool _showPassword = false;
 String? v;
   bool _isEmailValid = true;
@@ -26,6 +32,29 @@ String? v;
     _contactController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+  @override
+  void initState() {
+    super.initState();
+    // Initialize Firebase
+    Firebase.initializeApp();
+  }
+  Future<void> _register() async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // Registration successful, navigate to the next screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+      );
+    } catch (e) {
+      // Registration failed, handle the error
+      print('Registration error: $e');
+      // You can show an error message to the user or handle the error in a different way
+    }
   }
 
   @override
@@ -138,10 +167,15 @@ String? v;
               ),
               SizedBox(height: 40.0),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   bool validate = k1.currentState!.validate();
                   print(validate);
                   if (validate == true) {
+                    if (check == true) {
+                      SharedPreferences shared = await SharedPreferences.getInstance();
+                      await shared.setBool("isLogged", true);
+                    }
+                    _register();
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
