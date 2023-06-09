@@ -44,6 +44,7 @@ String? v;
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
+
       );
       // Registration successful, navigate to the next screen
       Navigator.pushReplacement(
