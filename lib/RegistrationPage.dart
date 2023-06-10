@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
+import 'package:firebase_database/firebase_database.dart';
 import 'DashboardPage.dart';
 import 'LoginPage.dart';
+
+class MyUser {
+  final String name;
+  final String email;
+  final String contact;
+
+  MyUser({
+    required this.name,
+    required this.email,
+    required this.contact,
+  });
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'contact': contact,
+    };
+  }
+}
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -18,6 +37,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController _contactController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _database = FirebaseDatabase.instance.reference();
+
   bool check = false;
   bool _showPassword = false;
 String? v;
@@ -40,11 +61,29 @@ String? v;
     Firebase.initializeApp();
   }
   Future<void> _register() async {
+    String name = _nameController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String contact = _contactController.text.trim();
+
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+      // Create a User object to store additional user information
+      MyUser user = MyUser(name: name, email: email, contact: contact);
+      // Store the user data in the database
+      DatabaseReference userRef = _database.child('users').push();
+      userRef.set({
+        'name': name,
+        'email': email,
+        'contact': contact,
+      });
+
+      // Store additional user information in Firebase Firestore
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set(user.toMap());
+
       // Registration successful, navigate to the next screen
       Navigator.pushReplacement(
         context,
