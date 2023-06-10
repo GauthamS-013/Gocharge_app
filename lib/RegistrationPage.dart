@@ -70,6 +70,7 @@ String? v;
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
+
       );
       // Create a User object to store additional user information
       MyUser user = MyUser(name: name, email: email, contact: contact);
