@@ -3,7 +3,7 @@ import 'package:ev_charging/booknow.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:your_app/firestore_data_import.dart';
+
 
 
 
@@ -21,7 +21,6 @@ void main() async {
   await Firebase.initializeApp();
   runApp(LoginApp());
 }
-
 class LoginApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
