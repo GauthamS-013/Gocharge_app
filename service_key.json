@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "gocharge-app",
+  "private_key_id": "df9910eb8ad91d0a60285f3fe3495f0b14b0c6b4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+UUI9QCsFSKE3\niL/5ybWdmi7IdBz91qXB7HHCG5ZA7T8FEuVmMnZoXf48GixtW5VAS6W+r20iAEag\nBh8Fds86+v4cXIVQ4WFq+zoMB1maWZZaiRCVS8fZxJqy9G33qhftgpZNGTZ2BM0O\nm+PWvmtRODG3+KCEVrS6CcznstNw8ZCfwe9rWFZorrtBDD10kqArGzV+cu4KHqa2\n8vGi+cXdC2um6O+eZCsLuB7RE2vwe5VeOR/Us+LG5xlBHVRxD/KKaBAwgQ7JZrmU\nSeiILOBqOr8okR9PjBU3Rsoa7mH7gij/8l/KAIU4epnWk/eZCqvpzO5771Bw303I\nNHt7HCyTAgMBAAECggEAFI8DmEk/vHThkXWww0NyXoGCzz2XyiXvRvkLOtwvCXl3\nZs1pQXZvCwwoRAbRyMhtYYIqd+RMZjFgb7XpkPYKIcVuQNMPxbJrCxrzZMxAdid6\nUfJfe7kxcAlIas9zt57Ese/6234/P1V6bzsQzChKwH3RBR4S/Oi+4h/f5iGPrLID\n4eB275UDHHw4n7oFL3w/AKKwtNT2VkGpV+gCAhb4IxwOOb+b1n6sx792ey5k/jTz\n9naNXFHMCjCUng1DlRAxcpza9J8JiepZd+eSqFpW6EmaqLwfneAktXsyMw2c9EFj\nn228fjebGcChZTuMCq2H9oAVP/UQarRItnqg/4A2/QKBgQDmPuWzgXzBdKCEExCN\nI06DwSL154378mT5u+Dpcsh58ojQLAneOVlsSXzld4K1aTY17FA7kbjcrBG3oHdg\ncEzuJE+utm0UUO9sKNaAJP5+Jqr5iMupxUYWLsX17emJmIs5YH4SmsELAfYmovkO\nVKYTRZx/neqg9KGMa1dyMq6GrwKBgQDTmwMmV4kAdZbhkilKZe80vH/pQT3Sm1m4\nNMnScym/sy1h5qwrJ82kQXRCYoUCOi2gji/YbHOEO+Xujys3/c4CeKJ+iGqBWhOz\nrFJaxo0PtE92RnGuGHdVojnbWEGBMI/rIKAmNHg4Xo6bF4KjLfPcK6Cqv3y+ZFTr\nVfsDrF5xXQKBgB8cCn9JlKiy8GlIBil7xsUImIevRMDxDHGt0ALa7nmDqrat7Jtp\nFksKVuTOVAvc7mU0y9ZwpxCx8ybjeJ3ALrTSlS2fGnfvQ5pSnkDsPrKe2OUkdZg3\nvnOK2FaVUcO0p8MV5ZLv8/tfxXmM9afZCiN6eV3I4YXj59wIOOWGMYyjAoGAZ6xh\n3a4zfFsgYkIHIuFQUkksbi69yGq+iWarnwU3Zim2SWoH3ljxAtHi0QeN3Sp94lTn\nkiSIcDgcjkXsydD61vEdw9q4O8nTL0t1Se5PfGs+J1eaKM7p4LXLnPDfnxkY2f0x\nGabJY+zH96qMIcDI4o0peZ650lo71NVaV1FjMC0CgYEAl0l4nUteG6VPGHMEDOpV\nyYzuUzy2tY59rA5KzpfaMe0B5RjX5xM2DDgWhhoOW7OjxkNO4ES8QdO6Qz2D5kKf\nu3PQjYpK0Y6257hmYYiD2/8VPM9NXMUHYEt99mXq2nKVAAkZVZgwudKlrarCYPmy\nn3s7sf1ypbFy5kfT34Ct6C8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-gbo3m@gocharge-app.iam.gserviceaccount.com",
+  "client_id": "112972976121607431647",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gbo3m%40gocharge-app.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
