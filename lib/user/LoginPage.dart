@@ -1,8 +1,11 @@
-import 'package:ev_charging/DashboardPage.dart';
-import 'package:ev_charging/RegistrationPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ev_charging/user/DashboardPage.dart';
+import 'package:ev_charging/user/RegistrationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../admin/Admindashboard.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -24,48 +27,6 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  void _login() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Login successful, handle the userCredential as needed
-      User? user = userCredential.user;
-      if (user != null) {
-        // User logged in successfully, navigate to the dashboard page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage()),
-        );
-      }
-    } catch (e) {
-      // Handle login errors
-      String errorMessage = e.toString();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Login Error'),
-            content: Text(errorMessage),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
 
@@ -165,7 +126,8 @@ class _LoginPageState extends State<LoginPage> {
                       SharedPreferences shared = await SharedPreferences.getInstance();
                       await shared.setBool("isLogged", true);
                     }
-                    _login();
+                    signIn(
+                        _emailController.text, _passwordController.text);
                   }
                 },
                 style: ButtonStyle(
@@ -197,4 +159,49 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  void route() {
+    User? user = FirebaseAuth.instance.currentUser;
+    var kk = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.get('role') == "User") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DashboardPage()),
+          );
+        }else{
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>  AdminDashboard(),
+            ),
+          );
+        }
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+  }
+  void signIn(String email, String password) async {
+    if (key.currentState!.validate()) {
+      try {
+        UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        route();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }
+    }
+  }
 }
+

@@ -1,7 +1,7 @@
-import 'package:ev_charging/Admin_Addstation.dart';
+import 'package:ev_charging/admin/Admin_Addstation.dart';
 import 'package:flutter/material.dart';
 
-import 'Stationdetails.dart';
+import '../user/Stationdetails.dart';
 
 class Station {
   final String? name;

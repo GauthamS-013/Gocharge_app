@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:ev_charging/DashboardPage.dart';
+import 'package:ev_charging/user/DashboardPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'LoginPage.dart';
-import 'RegistrationPage.dart';
+import 'user/LoginPage.dart';
+import 'user/RegistrationPage.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

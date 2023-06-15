@@ -1,4 +1,4 @@
-import 'package:ev_charging/Admin_managestation.dart';
+import 'package:ev_charging/admin/Admin_managestation.dart';
 import 'package:flutter/material.dart';
 
 class addstation extends StatefulWidget {

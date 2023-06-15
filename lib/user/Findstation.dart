@@ -1,4 +1,4 @@
-import 'package:ev_charging/Stationdetails.dart';
+import 'package:ev_charging/user/Stationdetails.dart';
 import 'package:flutter/material.dart';
 
 class Station {

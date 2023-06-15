@@ -1,6 +1,6 @@
-import 'package:ev_charging/LoginPage.dart';
-import 'package:ev_charging/ManageEVVehiclesPage.dart';
-import 'package:ev_charging/Viewbooking.dart';
+import 'package:ev_charging/user/LoginPage.dart';
+import 'package:ev_charging/user/ManageEVVehiclesPage.dart';
+import 'package:ev_charging/user/Viewbooking.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

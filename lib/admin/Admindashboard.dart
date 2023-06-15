@@ -1,9 +1,9 @@
-import 'package:ev_charging/Admin_viewbooking.dart';
+import 'package:ev_charging/admin/Admin_viewbooking.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Admin_managestation.dart';
-import 'LoginPage.dart';
+import '../user/LoginPage.dart';
 
 class AdminDashboard extends StatelessWidget {
   @override
