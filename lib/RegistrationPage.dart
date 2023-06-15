@@ -11,17 +11,21 @@ class MyUser {
   final String name;
   final String email;
   final String contact;
+  final String role;
 
   MyUser({
     required this.name,
     required this.email,
     required this.contact,
+    required this.role,
   });
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'email': email,
       'contact': contact,
+      'role': role,
     };
   }
 }
@@ -36,12 +40,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _contactController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _database = FirebaseDatabase.instance.reference();
-
+  String role = "User";
   bool check = false;
   bool _showPassword = false;
-String? v;
+  String? v;
   bool _isEmailValid = true;
   bool _isContactValid = true;
   GlobalKey<FormState> k1 = GlobalKey<FormState>();
@@ -54,12 +59,14 @@ String? v;
     _passwordController.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
     // Initialize Firebase
     Firebase.initializeApp();
   }
+
   Future<void> _register() async {
     String name = _nameController.text.trim();
     String email = _emailController.text.trim();
@@ -67,23 +74,34 @@ String? v;
     String contact = _contactController.text.trim();
 
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
-
       );
-      // Create a User object to store additional user information
-      MyUser user = MyUser(name: name, email: email, contact: contact);
+
+      // Save the user details to the database
+      MyUser user = MyUser(
+        name: name,
+        email: email,
+        contact: contact,
+        role: _currentItemSelected,
+      );
+
       // Store the user data in the database
       DatabaseReference userRef = _database.child('users').push();
       userRef.set({
         'name': name,
         'email': email,
         'contact': contact,
+        'role': _currentItemSelected,
       });
 
       // Store additional user information in Firebase Firestore
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set(user.toMap());
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set(user.toMap());
 
       // Registration successful, navigate to the next screen
       Navigator.pushReplacement(
@@ -96,20 +114,17 @@ String? v;
       // You can show an error message to the user or handle the error in a different way
     }
   }
+
   var options = [
     'User',
     'Admin',
   ];
   var _currentItemSelected = "User";
-  var rool = "User";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   title: Text('Registration'),
-      // ),
       body: Form(
         key: k1,
         child: Padding(
@@ -121,95 +136,107 @@ String? v;
               Text(
                 "Registration",
                 style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.green),
+                  fontSize: 50,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.green,
+                ),
               ),
               SizedBox(height: 16.0),
               Padding(
                 padding: EdgeInsets.only(left: 3.0, right: 3.0),
                 child: TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      labelText: 'Name',
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    validator: (n) {
-                      if (n!.isEmpty) {
-                        return "Please enter a name";
-                      }
-                    }),
+                    labelText: 'Name',
+                  ),
+                  validator: (n) {
+                    if (n!.isEmpty) {
+                      return "Please enter a name";
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(height: 16.0),
               Padding(
                 padding: EdgeInsets.only(left: 3.0, right: 3.0),
                 child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      labelText: 'Email',
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    validator: (e) {
-                      if (e!.isEmpty) {
-                        return "Please enter a valid email";
-                      }
-                    }),
+                    labelText: 'Email',
+                  ),
+                  validator: (e) {
+                    if (e!.isEmpty) {
+                      return "Please enter a valid email";
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(height: 16.0),
               Padding(
                 padding: EdgeInsets.only(left: 3.0, right: 3.0),
                 child: TextFormField(
-                    controller: _contactController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      labelText: 'Contact',
+                  controller: _contactController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    validator: (nu) {
-                      if (nu!.isEmpty) {
-                        return "PLease enter a contact number";
-                      }
-                      if (nu!.length != 10) {
-                        return "Enter a contact containing 10 numbers";
-                      }
-                    }),
+                    labelText: 'Contact',
+                  ),
+                  validator: (nu) {
+                    if (nu!.isEmpty) {
+                      return "Please enter a contact number";
+                    }
+                    if (nu.length != 10) {
+                      return "Enter a contact containing 10 numbers";
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(height: 16.0),
               Padding(
                 padding: EdgeInsets.only(left: 3.0, right: 3.0),
                 child: TextFormField(
-                    controller: _passwordController,
-                    obscureText: !_showPassword,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _showPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
+                  controller: _passwordController,
+                  obscureText: !_showPassword,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _showPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
+                      onPressed: () {
+                        setState(() {
+                          _showPassword = !_showPassword;
+                        });
+                      },
                     ),
-                    validator: (p) {
-                      if (p!.isEmpty) {
-                        return "Please enter a password";
-                      } else if (p.length < 6) {
-                        return 'Password must be at least 6 characters long.';
-                      } else if (p.contains(' ')) {
-                        return 'Password should not contain blank spaces.';
-                      }
-                      return null;
-                    }),
+                  ),
+                  validator: (p) {
+                    if (p!.isEmpty) {
+                      return "Please enter a password";
+                    } else if (p.length < 6) {
+                      return 'Password must be at least 6 characters long.';
+                    } else if (p.contains(' ')) {
+                      return 'Password should not contain blank spaces.';
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(height: 16.0),
               Padding(
@@ -217,7 +244,7 @@ String? v;
                 child: Row(
                   children: [
                     Text(
-                      "Role : ",
+                      "Role: ",
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
@@ -228,22 +255,24 @@ String? v;
                       isExpanded: false,
                       iconEnabledColor: Colors.green,
                       focusColor: Colors.black,
-                      items: options.map((String dropDownStringItem) {
-                        return DropdownMenuItem<String>(
-                          value: dropDownStringItem,
-                          child: Text(
-                            dropDownStringItem,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
+                      items: options.map(
+                            (String dropDownStringItem) {
+                          return DropdownMenuItem<String>(
+                            value: dropDownStringItem,
+                            child: Text(
+                              dropDownStringItem,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        },
+                      ).toList(),
                       onChanged: (newValueSelected) {
                         setState(() {
                           _currentItemSelected = newValueSelected!;
-                          rool = newValueSelected;
+                          role = newValueSelected;
                         });
                       },
                       value: _currentItemSelected,
@@ -258,18 +287,23 @@ String? v;
                   print(validate);
                   if (validate == true) {
                     if (check == true) {
-                      SharedPreferences shared = await SharedPreferences.getInstance();
+                      SharedPreferences shared =
+                      await SharedPreferences.getInstance();
                       await shared.setBool("isLogged", true);
                     }
                     _register();
                     Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
                   }
                 },
                 style: ButtonStyle(
-                  minimumSize:
-                      MaterialStateProperty.all<Size>(Size(50.0, 36.0)),
+                  minimumSize: MaterialStateProperty.all<Size>(
+                    Size(50.0, 36.0),
+                  ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -285,7 +319,9 @@ String? v;
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
                   );
                 },
                 child: Text('Already a user? Login here'),
