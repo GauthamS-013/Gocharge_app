@@ -96,6 +96,12 @@ String? v;
       // You can show an error message to the user or handle the error in a different way
     }
   }
+  var options = [
+    'User',
+    'Admin',
+  ];
+  var _currentItemSelected = "User";
+  var rool = "User";
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +210,46 @@ String? v;
                       }
                       return null;
                     }),
+              ),
+              SizedBox(height: 16.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Role : ",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      isDense: true,
+                      isExpanded: false,
+                      iconEnabledColor: Colors.green,
+                      focusColor: Colors.black,
+                      items: options.map((String dropDownStringItem) {
+                        return DropdownMenuItem<String>(
+                          value: dropDownStringItem,
+                          child: Text(
+                            dropDownStringItem,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newValueSelected) {
+                        setState(() {
+                          _currentItemSelected = newValueSelected!;
+                          rool = newValueSelected;
+                        });
+                      },
+                      value: _currentItemSelected,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 40.0),
               ElevatedButton(
