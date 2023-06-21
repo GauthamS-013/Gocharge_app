@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Admin_managestation.dart';
 import '../user/LoginPage.dart';
+import 'adminProfilePage.dart';
 
 class AdminDashboard extends StatelessWidget {
   @override
@@ -12,6 +13,16 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text('Admin Dashboard'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              // Perform profile icon action
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => adminProfilePage()),
+              );
+            },
+          ),
           ElevatedButton(
               onPressed: () async {
                 SharedPreferences log = await SharedPreferences.getInstance();
