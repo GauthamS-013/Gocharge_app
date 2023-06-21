@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? _user;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _contactController = TextEditingController();
-  TextEditingController _verificationCodeController = TextEditingController();
-  String _verificationId = '';
 
   @override
   void initState() {
     super.initState();
-    _loadUserProfile();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _loadUserProfile();
+    });
   }
 
   void _loadUserProfile() async {
@@ -26,10 +28,21 @@ class _ProfilePageState extends State<ProfilePage> {
     if (user != null) {
       setState(() {
         _user = user;
-        _nameController.text = user.displayName ?? '';
-        _emailController.text = user.email ?? '';
-        _contactController.text = user.phoneNumber ?? '';
       });
+
+      DocumentSnapshot snapshot = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        setState(() {
+          _nameController.text = data['name'] ?? '';
+          _emailController.text = data['email'] ?? '';
+          _contactController.text = data['contact'] ?? '';
+        });
+      }
     }
   }
 
@@ -44,17 +57,21 @@ class _ProfilePageState extends State<ProfilePage> {
         await _user!.updateDisplayName(newName);
         await _user!.updateEmail(newEmail);
 
-        // Update phone number with verification code
-        if (_verificationId.isNotEmpty) {
-          PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: _verificationId,
-            smsCode: _verificationCodeController.text.trim(),
-          );
-          await _user!.updatePhoneNumber(credential);
-        }
 
-        // Reload the user profile
-        _loadUserProfile();
+        // Get the current role value
+        DocumentSnapshot snapshot = await _firestore
+            .collection('users')
+            .doc(_user!.uid)
+            .get();
+        String currentRole = snapshot.get('role') ?? '';
+
+        // Update user profile in Firestore
+        await _firestore.collection('users').doc(_user!.uid).set({
+          'name': newName,
+          'email': newEmail,
+          'contact': newContact,
+          'role': currentRole,
+        });
 
         showDialog(
           context: context,
@@ -93,49 +110,6 @@ class _ProfilePageState extends State<ProfilePage> {
         },
       );
     }
-  }
-
-  void _verifyPhoneNumber(String phoneNumber) async {
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        // Auto verification completed, directly update the phone number
-        await _user!.updatePhoneNumber(credential);
-        _verificationCodeController.text = credential.smsCode!;
-        setState(() {
-          _verificationId = '';
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Verification Failed'),
-              content: Text('Failed to verify phone number: ${e.message}'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        setState(() {
-          _verificationId = verificationId;
-        });
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          _verificationId = verificationId;
-        });
-      },
-    );
   }
 
   @override
