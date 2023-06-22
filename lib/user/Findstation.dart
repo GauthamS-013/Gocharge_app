@@ -1,4 +1,5 @@
 import 'package:ev_charging/user/Stationdetails.dart';
+import 'package:ev_charging/user/booknow.dart';
 import 'package:flutter/material.dart';
 
 class Station {
@@ -79,7 +80,7 @@ class _FindStationPageState extends State<FindStationPage> {
                   // Perform actions when a station is tapped
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Stationsdetail()),
+                    MaterialPageRoute(builder: (context) => booknow()),
                   );
                 },
               ),
