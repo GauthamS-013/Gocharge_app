@@ -38,7 +38,12 @@ dependencies:
   firebase_core: ^2.13.1
   firebase_storage: ^11.2.2
   firebase_database: ^10.2.0
-  geolocator: ^9.0.2
+  geolocator: ^8.0.1
+  location:
+    git:
+      url: https://github.com/781flyingdutchman/flutterlocation.git
+      ref: V4
+      path: packages/location
 
 
   # The following adds the Cupertino Icons font to your application.
