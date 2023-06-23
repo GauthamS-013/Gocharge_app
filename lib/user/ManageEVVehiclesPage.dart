@@ -1,4 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Manage EV Vehicles',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ManageEVVehiclesPage(),
+    );
+  }
+}
 
 class ManageEVVehiclesPage extends StatefulWidget {
   @override
@@ -20,12 +42,28 @@ class _ManageEVVehiclesPageState extends State<ManageEVVehiclesPage> {
     super.dispose();
   }
 
-  void _addVehicle() {
+  void _addVehicle() async {
     String manufacturer = _manufacturerController.text;
     String model = _modelController.text;
     String registration = _registrationController.text;
 
-    Vehicle newVehicle = Vehicle(manufacturer: manufacturer, model: model, registration: registration);
+    User? user = FirebaseAuth.instance.currentUser;
+    String userEmail = user?.email ?? '';
+
+    Vehicle newVehicle = Vehicle(
+      manufacturer: manufacturer,
+      model: model,
+      registration: registration,
+      userEmail: userEmail,
+    );
+
+    CollectionReference vehiclesRef = FirebaseFirestore.instance.collection('vehicles');
+    await vehiclesRef.add({
+      'manufacturer': newVehicle.manufacturer,
+      'model': newVehicle.model,
+      'registration': newVehicle.registration,
+      'userEmail': newVehicle.userEmail,
+    });
 
     setState(() {
       vehicles.add(newVehicle);
@@ -92,19 +130,37 @@ class _ManageEVVehiclesPageState extends State<ManageEVVehiclesPage> {
             ),
             SizedBox(height: 8.0),
             Expanded(
-              child: ListView.builder(
-                itemCount: vehicles.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Car Manufacturer: ${vehicles[index].manufacturer}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Model: ${vehicles[index].model}'),
-                        Text('Registration: ${vehicles[index].registration}'),
-                      ],
-                    ),
-                  );
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('vehicles').where('userEmail', isEqualTo: FirebaseAuth.instance.currentUser?.email).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<DocumentSnapshot> documents = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        Vehicle vehicle = Vehicle(
+                          manufacturer: documents[index].get('manufacturer'),
+                          model: documents[index].get('model'),
+                          registration: documents[index].get('registration'),
+                          userEmail: documents[index].get('userEmail'),
+                        );
+                        return ListTile(
+                          title: Text('Car Manufacturer: ${vehicle.manufacturer}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Model: ${vehicle.model}'),
+                              Text('Registration: ${vehicle.registration}'),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return CircularProgressIndicator();
+                  }
                 },
               ),
             ),
@@ -119,6 +175,12 @@ class Vehicle {
   final String manufacturer;
   final String model;
   final String registration;
+  final String userEmail;
 
-  Vehicle({required this.manufacturer, required this.model, required this.registration});
+  Vehicle({
+    required this.manufacturer,
+    required this.model,
+    required this.registration,
+    required this.userEmail,
+  });
 }
