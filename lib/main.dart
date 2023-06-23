@@ -3,14 +3,7 @@ import 'package:ev_charging/user/booknow.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'admin/Admin_Addstation.dart';
-import 'admin/Admindashboard.dart';
-import 'user/Findstation.dart';
-import 'user/LoginPage.dart';
-import 'user/RegistrationPage.dart';
-import 'user/Roadmap.dart';
 import 'SplashScreen.dart';
-import 'user/Viewbooking.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
