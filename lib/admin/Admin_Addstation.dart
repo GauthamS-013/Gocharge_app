@@ -26,6 +26,7 @@ class _addstationState extends State<addstation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Add Station"),
       ),
@@ -193,6 +194,7 @@ class _MapPickerState extends State<MapPicker> {
         ])
             : {},
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_selectedLocation != null) {
