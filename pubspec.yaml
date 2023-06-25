@@ -39,6 +39,8 @@ dependencies:
   firebase_storage: ^11.2.3
   firebase_database: ^10.2.3
   geolocator: ^9.0.2
+  map_picker: ^0.0.3
+
   location:
     git:
       url: https://github.com/781flyingdutchman/flutterlocation.git
