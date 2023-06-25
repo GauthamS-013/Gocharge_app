@@ -181,7 +181,7 @@ class _MapPickerState extends State<MapPicker> {
         onMapCreated: (controller) => _mapController = controller,
         onTap: _selectLocation,
         initialCameraPosition: CameraPosition(
-          target: LatLng(37.7749, -122.4194), // Default initial location
+          target: LatLng(10.202116,76.383187), // Default initial location
           zoom: 12,
         ),
         markers: _selectedLocation != null

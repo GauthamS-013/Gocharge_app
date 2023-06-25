@@ -1,6 +1,14 @@
 import 'package:ev_charging/user/booknow.dart';
 import 'package:flutter/material.dart';
 
+class Station {
+  final String? name;
+  final double? longitude;
+  final double? lattitude;
+  final String? city;
+
+  Station({this.name, this.longitude, this.lattitude,this.city});
+}
 class Stationsdetail extends StatefulWidget {
   const Stationsdetail({Key? key}) : super(key: key);
 
@@ -9,6 +17,10 @@ class Stationsdetail extends StatefulWidget {
 }
 
 class _StationsdetailState extends State<Stationsdetail> {
+  get stations => null;
+
+  get index => null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +102,7 @@ class _StationsdetailState extends State<Stationsdetail> {
                 ElevatedButton(onPressed: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => booknow()));
+                      MaterialPageRoute(builder: (context) => booknow(stationName: stations[index].name!)));
                 }, child: Text("Book Now")),
               ],
             )

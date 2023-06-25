@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:math' as math;
-
 import 'booknow.dart';
 
 class Station {
@@ -143,12 +142,12 @@ class _FindStationPageState extends State<FindStationPage> {
                   ],
                 ),
                 onTap: () {
-                  // TODO: Implement station selection functionality
-                  // Perform actions when a station is tapped
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => booknow()),
-                      );
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => booknow(stationName: stations[index].name!),
+                    ),
+                  );
                 },
               ),
             ),
