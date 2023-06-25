@@ -23,29 +23,29 @@ class _ViewbookingState extends State<Viewbooking> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              TextFormField(
-                  controller: _bookdate,
-                  readOnly: true,
-                  style: TextStyle(),
-                  onTap: () async {
-                    DateTime? bookingdate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2025));
-                    setState(() {
-                      _bookdate.text = DateFormat.yMd().format(bookingdate!);
-                    });
-                  },
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Booking Date',
-                  ),
-                  validator: (d) {
-                    if (d!.isEmpty) {
-                      return "Please choose a date";
-                    }
-                  }),
+              // TextFormField(
+              //     controller: _bookdate,
+              //     readOnly: true,
+              //     style: TextStyle(),
+              //     onTap: () async {
+              //       DateTime? bookingdate = await showDatePicker(
+              //           context: context,
+              //           initialDate: DateTime.now(),
+              //           firstDate: DateTime.now(),
+              //           lastDate: DateTime(2025));
+              //       setState(() {
+              //         _bookdate.text = DateFormat.yMd().format(bookingdate!);
+              //       });
+              //     },
+              //     decoration: InputDecoration(
+              //       border: OutlineInputBorder(),
+              //       hintText: 'Booking Date',
+              //     ),
+              //     validator: (d) {
+              //       if (d!.isEmpty) {
+              //         return "Please choose a date";
+              //       }
+              //     }),
             ],
           ),
         ),

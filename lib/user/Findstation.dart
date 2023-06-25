@@ -123,10 +123,15 @@ class _FindStationPageState extends State<FindStationPage> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 80,
-              width: 90,
-              color: Colors.grey,
+            child: Card(
+              elevation: 2.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
               child: ListTile(
                 title: Text(
                   'Name: ${stations[index].name}',

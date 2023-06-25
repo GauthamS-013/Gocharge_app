@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../user/Stationdetails.dart';
 
 class Station {
   final String? name;
@@ -56,10 +55,15 @@ class _admin_managestationState extends State<admin_managestation> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 80,
-                  width: 90,
-                  color: Colors.grey,
+                child: Card(
+                  elevation: 2.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  ),
                   child: ListTile(
                     title: Text(
                       'Name: ${stations[index].name}',
@@ -82,14 +86,7 @@ class _admin_managestationState extends State<admin_managestation> {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Stationsdetail(),
-                        ),
-                      );
-                    },
+                    onTap: () {},
                   ),
                 ),
               );
