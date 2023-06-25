@@ -139,6 +139,10 @@ class _FindStationPageState extends State<FindStationPage> {
                       'City: ${stations[index].city}',
                       style: TextStyle(fontSize: 18),
                     ),
+                    Text(
+                      'Distance: ${stations[index].city}',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ],
                 ),
                 onTap: () {
