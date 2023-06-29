@@ -65,50 +65,24 @@ class _ViewbookingState extends State<adminViewbooking> {
               return ListView.builder(
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
-                  final bookingData = bookings[index].data() as Map<String, dynamic>?;
+                  final bookingData = bookings[index].data() as Map<String, dynamic>;
+                  final userName = bookingData['name'] ?? '';
+                  final bookingDate = bookingData['date'];
+                  final bookingTime = bookingData['time'];
 
-                  if (bookingData == null) {
-                    return SizedBox.shrink(); // Skip this item if data is null
+                  String formattedDate = '';
+                  if (bookingDate is Timestamp) {
+                    formattedDate = DateFormat('yyyy-MM-dd').format(bookingDate.toDate());
+                  } else if (bookingDate is String) {
+                    formattedDate = bookingDate;
                   }
 
-                  final userEmail = bookingData['userEmail'] as String?;
-
-                  return StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance.collection('users').doc(userEmail).snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-
-                      final userData = snapshot.data?.data() as Map<String, dynamic>?;
-
-                      if (userData == null) {
-                        return SizedBox.shrink(); // Skip this item if data is null
-                      }
-
-                      final userName = userData['name'] as String?;
-
-                      final bookingDate = bookingData['date'];
-
-                      String formattedDate = '';
-                      if (bookingDate is Timestamp) {
-                        formattedDate = DateFormat('yyyy-MM-dd').format(bookingDate.toDate());
-                      } else if (bookingDate is String) {
-                        formattedDate = bookingDate;
-                      }
-
-                      return Card(
-                        elevation: 2.0,
-                        child: ListTile(
-                          title: Text('User Name: $userName'),
-                          subtitle: Text('Booking Date: $formattedDate'),
-                        ),
-                      );
-                    },
+                  return Card(
+                    elevation: 2.0,
+                    child: ListTile(
+                      title: Text('Booking Date: $formattedDate'),
+                      subtitle: Text('Booking Time: $bookingTime'),
+                    ),
                   );
                 },
               );
