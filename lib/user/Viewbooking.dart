@@ -56,11 +56,21 @@ class _ViewbookingState extends State<Viewbooking> {
                 formattedDate = bookingDate;
               }
 
-              return Card(
-                elevation: 2.0,
-                child: ListTile(
-                  title: Text('Station Name: $stationName'),
-                  subtitle: Text('Booking Date: $formattedDate'),
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  elevation: 2.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: ListTile(
+                    title: Text('Station Name: $stationName',style: TextStyle(fontSize: 18),),
+                    subtitle: Text('Booking Date: $formattedDate',style: TextStyle(fontSize: 18),),
+                  ),
                 ),
               );
             },
