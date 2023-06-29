@@ -9,8 +9,9 @@ class Station {
   final double? longitude;
   final double? lattitude;
   final String? city;
+  final double? distance; // Add distance property
 
-  Station({this.name, this.longitude, this.lattitude,this.city});
+  Station({this.name, this.longitude, this.lattitude,this.city,this.distance});
 }
 
 class FindStationPage extends StatefulWidget {
@@ -69,11 +70,14 @@ class _FindStationPageState extends State<FindStationPage> {
                 longitude: longitude,
                 lattitude: lattitude,
                 city: data['city'].toString(),
+                distance: distanceInKm,
               );
             }
           }
           return null;
         }).where((station) => station != null).toList().cast<Station>();
+        // Sort stations by distance
+        stations.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
       });
     }).catchError((error) {
       print('Failed to fetch stations: $error');
@@ -145,7 +149,7 @@ class _FindStationPageState extends State<FindStationPage> {
                       style: TextStyle(fontSize: 18),
                     ),
                     Text(
-                      'Distance: ${stations[index].city}',
+                      'Distance: ${stations[index].distance!.toStringAsFixed(2)} km',
                       style: TextStyle(fontSize: 18),
                     ),
                   ],
