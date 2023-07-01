@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ev_charging/startpage.dart';
 import 'package:ev_charging/user/DashboardPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => StartPage()),
       );
     });
   }
